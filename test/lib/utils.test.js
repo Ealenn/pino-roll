@@ -1,6 +1,6 @@
 'use strict'
 
-const { addDays, addHours, startOfDay, startOfHour } = require('date-fns')
+const { addDays, addHours, startOfDay, startOfHour, format } = require('date-fns')
 const { writeFile, rm, stat } = require('fs/promises')
 const { join } = require('path')
 const { test } = require('tap')
@@ -56,9 +56,13 @@ test('getNext()', async ({ same, throws }) => {
 
 test('buildFileName()', async ({ equal, throws }) => {
   const ext = '.json'
+  const now = new Date()
+  const formatedDate = format(now, '.yyyy-MM-dd-HH.')
   throws(buildFileName, 'throws on empty input')
   equal(buildFileName('my-file'), 'my-file.1', 'appends 1 by default')
   equal(buildFileName('my-file', 5, ext), 'my-file.5.json', 'appends number and extension')
+  equal(buildFileName('my-file', 5, ext, '.yyyy-MM-dd-HH.'), `my-file${formatedDate}5.json`, 'appends date, number and extension')
+  equal(buildFileName('my-file', 5, undefined, '.yyyy-MM-dd-HH.'), `my-file${formatedDate}5`, 'appends date, number')
 })
 
 test('detectLastNumber()', async ({ test, beforeEach }) => {
