@@ -1,5 +1,5 @@
 {
-  "name": "pino-roll",
+  "name": "pino-roll-transport",
   "version": "0.0.0",
   "description": "A Pino transport that automatically rolls your log files",
   "main": "pino-roll.js",
