@@ -20,10 +20,10 @@
   "author": "Damien Simonin Feugas <damien.feugas@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "sonic-boom": "^3.x"
+    "sonic-boom": "^3.x",
+    "date-fns": "^2.x"
   },
   "devDependencies": {
-    "date-fns": "^2.x",
     "husky": "^8.x",
     "pino": "^8.x",
     "snazzy": "^9.x",
