@@ -1,0 +1,42 @@
+name: Publish
+
+on: 
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: |
+          VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $VERSION
+          npm version $VERSION --no-git-tag-version --allow-same-version
+          sed -i "s/SANDBOX/$VERSION/g" ./src/Configuration.ts
+          sed -i "s/SANDBOX/$VERSION/g" ./tests/Configuration.spec.ts
+      - run: npm ci
+      - run: npm test
+      - run: npm publish --dry-run
+
+  publish-npm:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - run: |
+          VERSION=$(echo $GITHUB_REF | cut -d / -f 3)
+          echo $VERSION
+          npm version $VERSION --no-git-tag-version --allow-same-version
+      - run: npm ci
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
