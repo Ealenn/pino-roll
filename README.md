@@ -62,7 +62,7 @@ You can specify any of [Sonic-Boom options](https://github.com/pinojs/sonic-boom
   Numerical values will be considered as a number of milliseconds.
   Using a numerical value will always create a new file upon startup.
 
-* `dateFormat`: appends a date string before the file number. See https://date-fns.org/v2.29.3/docs/format
+* `dateFormat?`: appends a date string before the file number. See https://date-fns.org/v2.29.3/docs/format
 
 * `extension?` appends the provided string after the file number.
 

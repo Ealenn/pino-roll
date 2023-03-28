@@ -72,6 +72,14 @@ module.exports = async function ({ file, size, frequency, dateFormat, extension,
   function roll () {
     destination.reopen(buildFileName(file, ++number, extension, dateFormat))
   }
+  process.on('SIGHUP', roll)
+  destination.on('error', () => {
+    try {
+      roll()
+    } catch {
+      console.log('LOGGER CRIT ERROR')
+    }
+  })
 
   function scheduleRoll () {
     clearTimeout(rollTimeout)
