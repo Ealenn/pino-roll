@@ -87,6 +87,14 @@ module.exports = async function ({ file, size, frequency, dateFormat, extension,
     process.stderr.write(`Pino retryEAGAIN : ${err} \n\r`)
   }
 
+  process.on('SIGHUP', function () {
+    roll()
+  })
+
+  process.on('SIGUSR2', function () {
+    roll()
+  })
+
   function scheduleRoll () {
     clearTimeout(rollTimeout)
     rollTimeout = setTimeout(() => {
