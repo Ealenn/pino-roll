@@ -58,6 +58,10 @@ module.exports = async function ({ file, size, frequency, dateFormat, extension,
     scheduleRoll()
   }
 
+  function roll () {
+    destination.reopen(buildFileName(file, ++number, extension, dateFormat))
+  }
+
   if (maxSize) {
     destination.on('write', writtenSize => {
       currentSize += writtenSize
@@ -69,13 +73,18 @@ module.exports = async function ({ file, size, frequency, dateFormat, extension,
     })
   }
 
-  destination.retryEAGAIN = (err, _writeBufferLen, _remainingBufferLen) => {
-    destination.reopen(buildFileName(file, ++number, extension, dateFormat))
-    process.stderr.write(`Pino Error : ${err}`)
-  }
+  destination.on('error', err => {
+    if (opts.mkdir) {
+      roll()
+    }
+    process.stderr.write(`Pino Error : ${err} \n\r`)
+  })
 
-  function roll () {
-    destination.reopen(buildFileName(file, ++number, extension, dateFormat))
+  destination.retryEAGAIN = (err, _writeBufferLen, _remainingBufferLen) => {
+    if (opts.mkdir) {
+      roll()
+    }
+    process.stderr.write(`Pino retryEAGAIN : ${err} \n\r`)
   }
 
   function scheduleRoll () {
