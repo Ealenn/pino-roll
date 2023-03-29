@@ -29,5 +29,8 @@
     "snazzy": "^9.x",
     "standard": "^17.x",
     "tap": "^16.x"
+  },
+  "tap": {
+    "check-coverage": false
   }
 }

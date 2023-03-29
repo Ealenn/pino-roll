@@ -69,17 +69,14 @@ module.exports = async function ({ file, size, frequency, dateFormat, extension,
     })
   }
 
+  destination.retryEAGAIN = (err, _writeBufferLen, _remainingBufferLen) => {
+    destination.reopen(buildFileName(file, ++number, extension, dateFormat))
+    process.stderr.write(`Pino Error : ${err}`)
+  }
+
   function roll () {
     destination.reopen(buildFileName(file, ++number, extension, dateFormat))
   }
-  process.on('SIGHUP', roll)
-  destination.on('error', () => {
-    try {
-      roll()
-    } catch {
-      console.log('LOGGER CRIT ERROR')
-    }
-  })
 
   function scheduleRoll () {
     clearTimeout(rollTimeout)
